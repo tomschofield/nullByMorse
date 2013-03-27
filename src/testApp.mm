@@ -1,16 +1,33 @@
+/*
+ Copyright Tom Schofield 2012
+ This program is free software: you can redistribute it and/or modify
+ it under the terms of the GNU General Public License as published by
+ the Free Software Foundation, either version 3 of the License, or
+ (at your option) any later version.
+ 
+ This program is distributed in the hope that it will be useful,
+ but WITHOUT ANY WARRANTY; without even the implied warranty of
+ MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the
+ GNU General Public License for more details.
+ 
+ You should have received a copy of the GNU General Public License
+ along with this program.  If not, see <http://www.gnu.org/licenses/>.
+ */
+
 #include "testApp.h"
 
-//--------------------------------------------------------------
-void testApp::setup(){	
-//	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
-	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_PORTRAIT);
 
+//--------------------------------------------------------------
+void testApp::setup(){
+    //	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_LANDSCAPE_RIGHT);
+	ofxiPhoneSetOrientation(OFXIPHONE_ORIENTATION_PORTRAIT);
+    
 	ofSetFrameRate(30);
     ofEnableSmoothing();
 	grabber.initGrabber(480, 360, OF_PIXELS_BGRA);
 	
 	pix = new unsigned char[ (int)( grabber.getWidth() * grabber.getHeight() * 3.0) ];
-    monaco.loadFont("MONACO.TTF", 50);
+    monaco.loadFont("MONACO.TTF", 32);
     monaco.setSpaceSize(0.5f);
     lampIsOn = false;
     onDuration=0;
@@ -21,7 +38,7 @@ void testApp::setup(){
     rad = 10;
     currentMorse="";
     translation="";
-    morseSentence="";
+    morseSentence="ICEBERG";
     loadMorseFromFile();
     
     //cout<<ofGetHeight()<<" "<<ofGetWidth()<<endl;
@@ -34,7 +51,7 @@ void testApp::setup(){
     gui.addSlider(ofPoint(guiPos.x,guiPos.y-50), ofGetWidth()/2, 100, 300, "Morse Speed");
     gui.addToggle(ofPoint(guiPos.x,guiPos.y-110), 40,30, "Clear");
     baseBrightness=1000;
-
+    
 }
 
 //--------------------------------------------------------------
@@ -55,7 +72,7 @@ void testApp::update(){
 }
 
 //--------------------------------------------------------------
-void testApp::draw(){	
+void testApp::draw(){
 	
 	ofSetColor(255);
 	grabber.draw(0, 0);
@@ -85,10 +102,10 @@ void testApp::draw(){
     
     brightness/=numSamples;
     /*if(baseBrightness<brightness){
-        baseBrightness=brightness;
-        cout<<"RESETTI|NG BASE "<<baseBrightness;
+     baseBrightness=brightness;
+     cout<<"RESETTI|NG BASE "<<baseBrightness;
      
-    }*/
+     }*/
     if (_touch) {
         baseBrightness=brightness;
         _touch=false;
@@ -119,49 +136,49 @@ void testApp::draw(){
                 morseSentence="";
                 currentMorse="";
                 ////cout<<"space"<<endl;
-
+                
             }
             else{
-                //break line if it's too long for screen    
-                int maxNumberOfCharacters = 6;
+                //break line if it's too long for screen
+                int maxNumberOfCharacters = 20;
                 /*if (morseSentence.size()<maxNumberOfCharacters) {
-                    morseSentence+=getCharacterFromMorse(currentMorse);
-                    cout<<"short word"<<endl;
-                }
-                else{
-                    morseSentence+="\n"+getCharacterFromMorse(currentMorse);
-                    cout<<"long word"<<endl;
-                }*/
+                 morseSentence+=getCharacterFromMorse(currentMorse);
+                 cout<<"short word"<<endl;
+                 }
+                 else{
+                 morseSentence+="\n"+getCharacterFromMorse(currentMorse);
+                 cout<<"long word"<<endl;
+                 }*/
                 if(morseSentence.size() % maxNumberOfCharacters==0 && morseSentence.size()!=0){
                     morseSentence+="\n-"+getCharacterFromMorse(currentMorse);
                 }
                 else{
-                   morseSentence+=getCharacterFromMorse(currentMorse);    
+                    morseSentence+=getCharacterFromMorse(currentMorse);
                 }
                 
                 currentMorse="";
             }
-
+            
         }
         else if(offDuration>=baseUnitOfTime*6){
             //this is word space
             currentMorse="";
-
+            
         }
         else if(offDuration<=baseUnitOfTime*2){
             //this is an inter dash gap and can be ignored
         }
-    
+        
         timer.setIsLocked(true);
         timer.start();
     }
     //if we've just finished a flash
     if(!lampIsOn && timer.getIsLocked()){
         onDuration = timer.get();
-
+        
         //find the length of the interval
         if (onDuration>baseUnitOfTime*0.5 && onDuration <baseUnitOfTime *2) {
-          //this is a dot
+            //this is a dot
             currentMorse+=".";
         }
         else if (onDuration>=baseUnitOfTime*2 && onDuration <baseUnitOfTime *5) {
@@ -172,7 +189,7 @@ void testApp::draw(){
         timer.start();
     }
     
-  //  monaco.drawString(currentMorse+" "+ofToString(lampIsOn)+" "+ofToString(offDuration), 50, 50);
+    //  monaco.drawString(currentMorse+" "+ofToString(lampIsOn)+" "+ofToString(offDuration), 50, 50);
     monaco.drawString(morseSentence, 10, 100);
     gui.draw();
 }
@@ -194,7 +211,7 @@ void testApp::touchMoved(ofTouchEventArgs & touch){
 
 //--------------------------------------------------------------
 void testApp::touchUp(ofTouchEventArgs & touch){
-
+    
 }
 
 //--------------------------------------------------------------
@@ -205,7 +222,7 @@ void testApp::touchDoubleTap(ofTouchEventArgs & touch){
 
 //--------------------------------------------------------------
 void testApp::touchCancelled(ofTouchEventArgs & touch){
-
+    
 }
 
 //--------------------------------------------------------------
@@ -226,7 +243,7 @@ void testApp::gotMemoryWarning(){
 //--------------------------------------------------------------
 void testApp::deviceOrientationChanged(int newOrientation){
     //cout<<ofGetHeight()<<" "<<ofGetWidth()<<endl;
-
+    
 }
 
 void testApp::loadMorseFromFile(){
@@ -238,18 +255,18 @@ void testApp::loadMorseFromFile(){
         while ( myfile.good() )
         {
             getline (myfile,line);
-        
+            
             vector<string> twoHalves = ofSplitString(line, "\t");
             textTranslation.push_back(twoHalves[0]);
             morseCode.push_back(twoHalves[1]);
-         //cout << line << endl;
+            //cout << line << endl;
         }
         myfile.close();
     }
     else{
-    
+        
         //cout<<"can't open file \n";
-        }
+    }
 }
 
 string testApp::getCharacterFromMorse(string morse){
