@@ -6,6 +6,9 @@
 #include "ofxSimpleTimer.h"
 #include "simpleGui.h"
 
+#include "ofxOpenCv.h"
+
+
 class testApp : public ofxiPhoneApp{
 	
 	public:
@@ -31,7 +34,7 @@ class testApp : public ofxiPhoneApp{
 		ofTexture tex;
 		unsigned char * pix;
         ofxSimpleTimer timer;
-    ///the touch point centre
+        ///the touch point centre
         ofPoint aOi;
         float rad;
         ofTrueTypeFont monaco;
@@ -50,4 +53,29 @@ class testApp : public ofxiPhoneApp{
     vector<string> textTranslation;
     
     simpleGui gui;
+    
+    ///OPENCV STUFF
+    
+    ofTexture vidTex;
+    
+    ofxCvColorImage	colorImg;
+    
+    ofxCvGrayscaleImage grayImage;
+    ofxCvGrayscaleImage grayBg;
+    ofxCvGrayscaleImage grayDiff;
+    
+    float capW;
+    float capH;
+    
+    ofxCvContourFinder contourFinder;
+    
+    int threshold;
+    bool bLearnBakground;
+    
+    float trainingMaxBrightness;
+    float trainingMinBrightness;
+    bool findCentre;
+    bool train;
+    int numberOfFramesToTrainFor;
+    
 };
