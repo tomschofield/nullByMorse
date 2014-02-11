@@ -14,7 +14,7 @@ bool simpleToggle::getValue(){
 }
 void simpleToggle::update(ofPoint touch){
     if(touch.x>=pos.x && touch.x <= pos.x+width && touch.y > pos.y && touch.y < pos.y +height){
-        isOn=true;
+        isOn=!isOn;
     }
 }
 string simpleToggle::getName(){
@@ -29,7 +29,7 @@ void simpleToggle::draw(ofTrueTypeFont &font){
         ofNoFill();
         ofSetColor(255, 255, 255);
         roundedRect(pos.x, pos.y, width, height,6);
-        /*ofFill();
+       /* ofFill();
         ofSetColor(150, 150, 150,200);
         roundedRect(pos.x, pos.y, width, height,6);
         ofSetColor(100, 100, 100,200);
@@ -39,18 +39,20 @@ void simpleToggle::draw(ofTrueTypeFont &font){
     else{
         ofNoFill();
         ofSetColor(255, 255, 255);
+        int rounding = 2;
         roundedRect(pos.x, pos.y, width, height,6);
         ofFill();
         ofSetColor(255, 255, 255,200);
         roundedRect(pos.x, pos.y, width, height,6);
         ofSetColor(150, 150, 150,200);
-        roundedRect(pos.x, pos.y+(height*0.5), width, height*0.5,56);
+        roundedRect(pos.x, pos.y+(height*0.5), width, height*0.5,6);
     }
     ofSetColor(255, 255, 255);
     font.drawString(name, pos.x+width+5, pos.y+height);
     ofPopStyle();
     //isOn=false;
 }
+
 //these functions courtesy of http://forum.openframeworks.cc/index.php?topic=4448.0
 void simpleToggle::roundedRect(float x, float y, float w, float h, float r) {
     ofBeginShape();
